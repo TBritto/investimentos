@@ -86,6 +86,18 @@ streamlit run app/streamlit_app.py
 
 A aplicacao abre por padrao em `http://localhost:8501`.
 
+## Renda fixa
+
+A pagina `Renda Fixa` possui um simulador educacional para:
+
+- titulo prefixado;
+- IPCA+ simplificado;
+- percentual do CDI;
+- valor presente aproximado;
+- marcacao a mercado simplificada.
+
+Os resultados sao estimativas e nao representam recomendacao de compra ou venda.
+
 ## Testes
 
 ```bash
