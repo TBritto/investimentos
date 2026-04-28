@@ -161,6 +161,11 @@ Os modulos `src/analytics/returns.py` e `src/analytics/risk.py` incluem funcoes 
 - matriz de correlacao;
 - Sharpe simplificado.
 
+## Macro
+
+A pagina `Macro` exibe Selic, IPCA e dolar usando as series publicas do Banco Central SGS.
+Ela permite selecionar periodo de 1 ano, 5 anos ou maximo, mostra cards com a ultima leitura, graficos de linha e tabelas expansivas.
+
 ## Testes
 
 ```bash
