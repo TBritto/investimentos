@@ -105,6 +105,37 @@ As respostas sao normalizadas para as colunas `date`, `value` e `code`, com cach
 A pagina `Macro` exibe Selic, IPCA e dolar usando as series publicas do Banco Central SGS.
 Ela permite selecionar periodo de 1 ano, 5 anos ou maximo, mostra cards com a ultima leitura, graficos de linha e tabelas expansivas.
 
+## Visual terminal
+
+A interface usa `app/styles.py` para aplicar tema escuro, paineis compactos, sidebar com watchlist mockada, barra de comando global e densidade visual inspirada em terminais financeiros modernos, sem copiar marca, logo ou layout proprietario.
+
+## Terminal de comandos
+
+A pagina `Terminal` possui parser, registry e historico de comandos da sessao.
+Comandos reconhecidos inicialmente:
+
+```text
+help
+macro selic
+macro ipca
+macro dolar
+quote AAPL
+compare AAPL MSFT
+portfolio risco
+```
+
+Quando um comando depende de conector ainda nao integrado nesta branch, o terminal retorna uma mensagem amigavel indicando a etapa responsavel.
+
+## Carteira CSV
+
+A pagina `Carteira` permite upload de um CSV com as colunas:
+
+```text
+ativo, quantidade, preco_medio, classe, data_compra
+```
+
+`data_compra` e opcional. A pagina calcula `valor_investido`, percentual por ativo, percentual por classe e total investido. Esta etapa nao busca preco atual e nao faz recomendacao de compra ou venda.
+
 ## Testes
 
 ```bash

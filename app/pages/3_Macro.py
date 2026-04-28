@@ -2,12 +2,13 @@ import streamlit as st
 import plotly.express as px
 import pandas as pd
 
+from app.styles import apply_terminal_style, render_page_header
 from src.analytics.macro import get_period_start, latest_value
 from src.data.bcb import get_ipca, get_selic, get_usdbrl
 
 
-st.title("Macro")
-st.caption("Indicadores macroeconomicos publicos do Banco Central SGS.")
+apply_terminal_style()
+render_page_header("Macro", "Series publicas do Banco Central SGS em leitura compacta.")
 
 
 def render_indicator(name: str, data: pd.DataFrame) -> None:
@@ -33,7 +34,6 @@ indicators = [
 ]
 
 for name, fetcher in indicators:
-    st.subheader(name)
     try:
         indicator_data = fetcher(start_date=start_date)
     except Exception as exc:

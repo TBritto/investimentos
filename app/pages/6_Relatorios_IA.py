@@ -1,5 +1,6 @@
 import streamlit as st
 
+from app.styles import apply_terminal_style, render_page_header
 
-st.title("Relatorios IA")
-st.caption("Pagina placeholder para futuros relatorios assistidos por IA.")
+apply_terminal_style()
+render_page_header("Relatorios IA", "Painel reservado para relatorios assistidos por IA.")

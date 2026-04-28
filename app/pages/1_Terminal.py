@@ -1,26 +1,34 @@
 import streamlit as st
 
-from src.commands.macro import execute_macro_command
+from app.styles import apply_terminal_style, render_page_header
+from src.terminal.registry import execute_command
 
 
-st.title("Terminal")
-st.caption("Execute comandos iniciais do MVP.")
+apply_terminal_style()
+render_page_header("Terminal", "Comandos reconhecidos, historico de sessao e respostas compactas.")
 
-command = st.text_input("Comando", value="macro selic")
-start_date = st.text_input("Data inicial", placeholder="YYYY-MM-DD")
-end_date = st.text_input("Data final", placeholder="YYYY-MM-DD")
+if "terminal_history" not in st.session_state:
+    st.session_state["terminal_history"] = []
+
+command = st.text_input("Comando", value="help", key="terminal_command_input")
 
 if st.button("Executar"):
     try:
-        result = execute_macro_command(
-            command,
-            start_date=start_date or None,
-            end_date=end_date or None,
-        )
+        result = execute_command(command)
     except Exception as exc:
         st.error(str(exc))
     else:
+        st.session_state["terminal_history"].insert(0, {"raw": command, "result": result})
+
+for item in st.session_state["terminal_history"]:
+    result = item["result"]
+    with st.container():
+        st.markdown(f"**> {item['raw']}**")
         st.subheader(result.title)
-        st.dataframe(result.data, use_container_width=True)
-        if not result.data.empty:
-            st.line_chart(result.data.set_index("date")["value"])
+        if result.message:
+            st.write(result.message)
+        if result.dataframe is not None:
+            st.dataframe(result.dataframe, use_container_width=True)
+        if result.chart is not None:
+            st.plotly_chart(result.chart, use_container_width=True)
+        st.markdown("---")
