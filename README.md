@@ -53,6 +53,9 @@ Variaveis atuais:
 
 ```env
 FMP_API_KEY=
+PLUGGY_CLIENT_ID=
+PLUGGY_CLIENT_SECRET=
+PLUGGY_BASE_URL=
 ```
 
 Nao coloque chaves ou segredos no codigo.

@@ -63,6 +63,20 @@ Compara historico de dois ou mais tickers via camada OpenBB.
 compare AAPL MSFT
 ```
 
+### openfinance
+
+Prepara consultas via Pluggy/Open Finance, quando `PLUGGY_CLIENT_ID` e `PLUGGY_CLIENT_SECRET` estiverem configurados.
+
+```text
+openfinance connect-token
+openfinance items
+openfinance accounts
+openfinance accounts ITEM_ID
+openfinance transactions ACCOUNT_ID
+```
+
+O comando `connect-token` gera um token de curta duracao para uso no Pluggy Connect Widget. O consentimento do usuario acontece fora do terminal.
+
 ### portfolio risco
 
 Reservado para consolidar metricas de risco da carteira.

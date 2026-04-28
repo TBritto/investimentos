@@ -7,6 +7,7 @@ import pandas as pd
 
 from src.commands.macro import execute_macro_command
 from src.commands.quote_compare import execute_market_command
+from src.data.pluggy import create_connect_token, get_accounts, get_items, get_transactions
 from src.terminal.parser import CommandRequest
 
 
@@ -26,6 +27,10 @@ Comandos disponiveis:
 - macro dolar
 - quote TICKER
 - compare TICKER1 TICKER2 ...
+- openfinance connect-token
+- openfinance items
+- openfinance accounts
+- openfinance transactions ACCOUNT_ID
 - portfolio risco
 """.strip()
 
@@ -90,6 +95,50 @@ def portfolio_command(request: CommandRequest) -> CommandResult:
         )
 
     return CommandResult(title="Portfolio", message="Use portfolio risco.")
+
+
+def openfinance_command(request: CommandRequest) -> CommandResult:
+    if not request.args:
+        return CommandResult(
+            title="Open Finance",
+            message=(
+                "Use openfinance connect-token, openfinance items, "
+                "openfinance accounts ou openfinance transactions ACCOUNT_ID."
+            ),
+        )
+
+    action = request.args[0].lower()
+    try:
+        if action == "connect-token":
+            token = create_connect_token()
+            return CommandResult(
+                title="Open Finance",
+                message=f"Connect token gerado. Use no Pluggy Connect Widget: {token}",
+            )
+        if action == "items":
+            return CommandResult(title="Conexoes Open Finance", dataframe=get_items())
+        if action == "accounts":
+            item_id = request.args[1] if len(request.args) > 1 else None
+            return CommandResult(title="Contas Open Finance", dataframe=get_accounts(item_id=item_id))
+        if action == "transactions":
+            if len(request.args) < 2:
+                return CommandResult(
+                    title="Transacoes Open Finance",
+                    message="Use openfinance transactions ACCOUNT_ID.",
+                )
+            return CommandResult(
+                title="Transacoes Open Finance",
+                dataframe=get_transactions(account_id=request.args[1]),
+            )
+    except Exception as exc:
+        return CommandResult(title="Open Finance", message=str(exc))
+
+    return CommandResult(
+        title="Open Finance",
+        message=(
+            "Comando desconhecido. Use connect-token, items, accounts ou transactions ACCOUNT_ID."
+        ),
+    )
 
 
 def not_implemented_command(request: CommandRequest) -> CommandResult:

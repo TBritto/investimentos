@@ -25,6 +25,7 @@ def test_help_command_lists_initial_commands() -> None:
 
     assert result.title == "Ajuda"
     assert "macro selic" in result.message
+    assert "openfinance accounts" in result.message
     assert "portfolio risco" in result.message
 
 
@@ -63,6 +64,17 @@ def test_compare_command_requires_two_tickers() -> None:
 
     assert result.title == "Comparacao"
     assert "TICKER1 TICKER2" in result.message
+
+
+def test_openfinance_accounts_uses_pluggy_layer(monkeypatch) -> None:
+    data = pd.DataFrame({"id": ["account-1"], "name": ["Conta Corrente"]})
+
+    monkeypatch.setattr(terminal_commands, "get_accounts", lambda item_id=None: data)
+
+    result = execute_command("openfinance accounts")
+
+    assert result.title == "Contas Open Finance"
+    assert result.dataframe is data
 
 
 def test_unknown_command_returns_friendly_message() -> None:

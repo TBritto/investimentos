@@ -46,6 +46,51 @@ FMP_API_KEY=
 
 Falhas de provider/API devem ser convertidas para mensagens amigaveis.
 
+## Pluggy Open Finance
+
+Usado para preparar conexao com contas bancarias reais via Open Finance/Pluggy.
+
+Modulo principal:
+
+```text
+src/data/pluggy.py
+```
+
+Variaveis obrigatorias para ambiente real:
+
+```env
+PLUGGY_CLIENT_ID=
+PLUGGY_CLIENT_SECRET=
+```
+
+Variavel opcional para sandbox/testes:
+
+```env
+PLUGGY_BASE_URL=
+```
+
+Funcoes principais:
+
+```text
+create_api_key()
+create_connect_token(client_user_id=None, item_id=None, oauth_redirect_url=None, webhook_url=None)
+get_items()
+get_accounts(item_id=None)
+get_transactions(account_id, from_date=None, to_date=None, page_size=100)
+```
+
+Comandos no terminal:
+
+```text
+openfinance connect-token
+openfinance items
+openfinance accounts
+openfinance accounts ITEM_ID
+openfinance transactions ACCOUNT_ID
+```
+
+Credenciais Pluggy devem ficar apenas no `.env`. O fluxo de conexao bancaria exige consentimento do usuario via Pluggy Connect Widget; o projeto nao guarda senha de banco.
+
 ## CSV de Carteira
 
 Upload local na pagina Carteira.
