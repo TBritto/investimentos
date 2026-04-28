@@ -2,6 +2,7 @@ import streamlit as st
 
 from app.styles import apply_terminal_style, render_page_header
 from src.analytics.fixed_income import simulate_fixed_income
+from src.data.tesouro import get_treasury_bonds
 
 
 apply_terminal_style()
@@ -12,6 +13,16 @@ st.warning(
     "Nao use como recomendacao de compra, venda ou manutencao."
 )
 
+st.subheader("Titulos publicos")
+try:
+    treasury_bonds = get_treasury_bonds()
+except Exception as exc:
+    st.info(f"Fonte do Tesouro Direto indisponivel no momento: {exc}")
+else:
+    st.caption("Precos e taxas publicos do Tesouro Direto. Dados informativos, sem recomendacao.")
+    st.dataframe(treasury_bonds, use_container_width=True)
+
+st.subheader("Simulador")
 indexer = st.selectbox("Indexador", ["prefixado", "IPCA+", "percentual CDI"])
 invested_amount = st.number_input("Valor investido", min_value=0.0, value=10000.0, step=500.0)
 contracted_annual_rate_pct = st.number_input("Taxa contratada anual (%)", value=10.0, step=0.1)

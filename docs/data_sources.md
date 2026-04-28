@@ -46,6 +46,43 @@ FMP_API_KEY=
 
 Falhas de provider/API devem ser convertidas para mensagens amigaveis.
 
+## Tesouro Direto
+
+Usado para precos e taxas publicos de titulos do Tesouro Direto.
+
+Modulo principal:
+
+```text
+src/data/tesouro.py
+```
+
+Fonte publica:
+
+```text
+https://www.tesourotransparente.gov.br/ckan/api/3/action/package_show?id=taxas-dos-titulos-ofertados-pelo-tesouro-direto
+```
+
+O recurso CSV oficial `precotaxatesourodireto.csv` e baixado a partir dos metadados CKAN e cacheado localmente em:
+
+```text
+data/raw/tesouro/
+```
+
+Funcoes principais:
+
+```text
+get_treasury_bonds(use_cache=True)
+get_treasury_price_history(year=None, use_cache=True)
+normalize_treasury_bonds(df)
+search_treasury_bonds(query)
+```
+
+As colunas sao normalizadas, quando disponiveis, para:
+
+```text
+nome, tipo, vencimento, taxa_compra, taxa_venda, preco_compra, preco_venda, data_base
+```
+
 ## CSV de Carteira
 
 Upload local na pagina Carteira.
