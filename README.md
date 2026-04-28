@@ -24,6 +24,7 @@ Este projeto nao implementa recomendacao automatica de compra, venda ou manutenc
 ├── src/
 │   ├── ai/                 # Reservado para recursos futuros de IA
 │   ├── analytics/          # Indicadores, carteira e metricas
+│   ├── commands/           # Comandos do terminal
 │   ├── data/               # Clientes de dados externos
 │   ├── storage/            # Configuracao e persistencia local
 │   └── terminal/           # Interface Streamlit
@@ -85,6 +86,19 @@ streamlit run app/streamlit_app.py
 ```
 
 A aplicacao abre por padrao em `http://localhost:8501`.
+
+## Comandos macro
+
+A pagina `Terminal` aceita os comandos iniciais:
+
+```text
+macro selic
+macro ipca
+macro dolar
+```
+
+Esses comandos usam series publicas do Banco Central SGS via `src/data/bcb.py`.
+As respostas sao normalizadas para as colunas `date`, `value` e `code`, com cache local em `data/raw/bcb/`.
 
 ## Testes
 
