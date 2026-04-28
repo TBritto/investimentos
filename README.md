@@ -53,6 +53,13 @@ Variaveis atuais:
 
 ```env
 FMP_API_KEY=
+OPENBB_PROVIDER=
+FIREFLY_BASE_URL=
+FIREFLY_ACCESS_TOKEN=
+PLUGGY_CLIENT_ID=
+PLUGGY_CLIENT_SECRET=
+PLUGGY_BASE_URL=
+PLUGGY_CONNECT_URL=
 ```
 
 Nao coloque chaves ou segredos no codigo.
@@ -109,6 +116,11 @@ macro ipca
 macro dolar
 quote AAPL
 compare AAPL MSFT
+fund 00.000.000/0001-91
+finance accounts
+finance transactions
+finance categories
+finance summary
 portfolio risco
 ```
 
@@ -118,6 +130,9 @@ Veja detalhes em [docs/commands.md](docs/commands.md).
 
 - Banco Central SGS para Selic, IPCA e dolar.
 - OpenBB para cotacoes, historicos e fundamentos quando providers estiverem configurados.
+- CVM para cadastro e informe diario de fundos.
+- Tesouro Direto para precos e taxas de titulos publicos.
+- Firefly III para financas pessoais quando configurado.
 - CSV local para composicao de carteira.
 - Arquivos PDF/TXT/Markdown enviados pelo usuario para analise local.
 

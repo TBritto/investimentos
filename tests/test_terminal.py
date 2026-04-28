@@ -1,6 +1,7 @@
-import pytest
-import pandas as pd
 from types import SimpleNamespace
+
+import pandas as pd
+import pytest
 
 import src.terminal.commands as terminal_commands
 from src.terminal.parser import parse_command
@@ -25,6 +26,9 @@ def test_help_command_lists_initial_commands() -> None:
 
     assert result.title == "Ajuda"
     assert "macro selic" in result.message
+    assert "fund CNPJ" in result.message
+    assert "finance accounts" in result.message
+    assert "openfinance accounts" in result.message
     assert "portfolio risco" in result.message
 
 
@@ -63,6 +67,43 @@ def test_compare_command_requires_two_tickers() -> None:
 
     assert result.title == "Comparacao"
     assert "TICKER1 TICKER2" in result.message
+
+
+def test_fund_command_uses_cvm_layer(monkeypatch) -> None:
+    data = pd.DataFrame({"cnpj_fundo": ["00000000000191"], "denom_social": ["Fundo Alpha"]})
+
+    def fake_find_fund_by_cnpj(cnpj: str):
+        assert cnpj == "00.000.000/0001-91"
+        return data
+
+    monkeypatch.setattr(terminal_commands, "find_fund_by_cnpj", fake_find_fund_by_cnpj)
+
+    result = execute_command("fund 00.000.000/0001-91")
+
+    assert result.title == "Fundos CVM"
+    assert result.dataframe is data
+
+
+def test_finance_command_uses_firefly_layer(monkeypatch) -> None:
+    data = pd.DataFrame({"name": ["Conta Corrente"], "current_balance": [100.0]})
+
+    monkeypatch.setattr(terminal_commands, "get_firefly_accounts", lambda: data)
+
+    result = execute_command("finance accounts")
+
+    assert result.title == "Contas Firefly III"
+    assert result.dataframe is data
+
+
+def test_openfinance_accounts_uses_pluggy_layer(monkeypatch) -> None:
+    data = pd.DataFrame({"id": ["account-1"], "name": ["Conta Corrente"]})
+
+    monkeypatch.setattr(terminal_commands, "get_openfinance_accounts", lambda item_id=None: data)
+
+    result = execute_command("openfinance accounts")
+
+    assert result.title == "Contas Open Finance"
+    assert result.dataframe is data
 
 
 def test_unknown_command_returns_friendly_message() -> None:

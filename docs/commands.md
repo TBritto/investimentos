@@ -63,6 +63,33 @@ Compara historico de dois ou mais tickers via camada OpenBB.
 compare AAPL MSFT
 ```
 
+### finance
+
+Consulta dados de financas pessoais via Firefly III, quando `FIREFLY_BASE_URL` e `FIREFLY_ACCESS_TOKEN` estiverem configurados.
+
+```text
+finance accounts
+finance transactions
+finance categories
+finance summary
+```
+
+### openfinance
+
+Prepara consultas via Pluggy/Open Finance, quando `PLUGGY_CLIENT_ID` e `PLUGGY_CLIENT_SECRET` estiverem configurados.
+
+```text
+openfinance connect-token
+openfinance items
+openfinance accounts
+openfinance accounts ITEM_ID
+openfinance transactions ACCOUNT_ID
+```
+
+O comando `connect-token` gera um token de curta duracao para uso no Pluggy Connect Widget. O consentimento do usuario acontece fora do terminal.
+
+A pagina `Open Finance` oferece o fluxo visual equivalente para uso profissional com consentimento.
+
 ### portfolio risco
 
 Reservado para consolidar metricas de risco da carteira.
