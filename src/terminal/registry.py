@@ -5,6 +5,7 @@ from typing import Callable
 from src.terminal.commands import (
     CommandResult,
     compare_command,
+    finance_command,
     fund_command,
     help_command,
     macro_command,
@@ -23,6 +24,7 @@ COMMAND_REGISTRY: dict[str, CommandHandler] = {
     "quote": quote_command,
     "compare": compare_command,
     "fund": fund_command,
+    "finance": finance_command,
     "portfolio": portfolio_command,
 }
 

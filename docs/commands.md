@@ -63,6 +63,17 @@ Compara historico de dois ou mais tickers via camada OpenBB.
 compare AAPL MSFT
 ```
 
+### finance
+
+Consulta dados de financas pessoais via Firefly III, quando `FIREFLY_BASE_URL` e `FIREFLY_ACCESS_TOKEN` estiverem configurados.
+
+```text
+finance accounts
+finance transactions
+finance categories
+finance summary
+```
+
 ### portfolio risco
 
 Reservado para consolidar metricas de risco da carteira.

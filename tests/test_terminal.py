@@ -1,6 +1,7 @@
-import pytest
-import pandas as pd
 from types import SimpleNamespace
+
+import pandas as pd
+import pytest
 
 import src.terminal.commands as terminal_commands
 from src.terminal.parser import parse_command
@@ -26,6 +27,7 @@ def test_help_command_lists_initial_commands() -> None:
     assert result.title == "Ajuda"
     assert "macro selic" in result.message
     assert "fund CNPJ" in result.message
+    assert "finance accounts" in result.message
     assert "portfolio risco" in result.message
 
 
@@ -78,6 +80,17 @@ def test_fund_command_uses_cvm_layer(monkeypatch) -> None:
     result = execute_command("fund 00.000.000/0001-91")
 
     assert result.title == "Fundos CVM"
+    assert result.dataframe is data
+
+
+def test_finance_command_uses_firefly_layer(monkeypatch) -> None:
+    data = pd.DataFrame({"name": ["Conta Corrente"], "current_balance": [100.0]})
+
+    monkeypatch.setattr(terminal_commands, "get_accounts", lambda: data)
+
+    result = execute_command("finance accounts")
+
+    assert result.title == "Contas Firefly III"
     assert result.dataframe is data
 
 

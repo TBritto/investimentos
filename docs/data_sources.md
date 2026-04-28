@@ -158,6 +158,43 @@ As colunas sao normalizadas, quando disponiveis, para:
 nome, tipo, vencimento, taxa_compra, taxa_venda, preco_compra, preco_venda, data_base
 ```
 
+## Firefly III
+
+Usado para integrar controle de financas pessoais self-hosted via API REST do Firefly III.
+
+Modulo principal:
+
+```text
+src/data/firefly.py
+```
+
+Variaveis obrigatorias:
+
+```env
+FIREFLY_BASE_URL=
+FIREFLY_ACCESS_TOKEN=
+```
+
+Funcoes principais:
+
+```text
+get_accounts(account_type=None)
+get_transactions(start_date=None, end_date=None, limit=50)
+get_categories()
+get_finance_summary(start_date=None, end_date=None)
+```
+
+Comandos no terminal:
+
+```text
+finance accounts
+finance transactions
+finance categories
+finance summary
+```
+
+O token deve ser gerado no Firefly III como Personal Access Token ou por fluxo OAuth. Nao guarde tokens no repositorio.
+
 ## CSV de Carteira
 
 Upload local na pagina Carteira.
