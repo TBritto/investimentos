@@ -53,6 +53,8 @@ Variaveis atuais:
 
 ```env
 FMP_API_KEY=
+FIREFLY_BASE_URL=
+FIREFLY_ACCESS_TOKEN=
 ```
 
 Nao coloque chaves ou segredos no codigo.

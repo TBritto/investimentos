@@ -25,6 +25,7 @@ def test_help_command_lists_initial_commands() -> None:
 
     assert result.title == "Ajuda"
     assert "macro selic" in result.message
+    assert "finance accounts" in result.message
     assert "portfolio risco" in result.message
 
 
@@ -63,6 +64,17 @@ def test_compare_command_requires_two_tickers() -> None:
 
     assert result.title == "Comparacao"
     assert "TICKER1 TICKER2" in result.message
+
+
+def test_finance_command_uses_firefly_layer(monkeypatch) -> None:
+    data = pd.DataFrame({"name": ["Conta Corrente"], "current_balance": [100.0]})
+
+    monkeypatch.setattr(terminal_commands, "get_accounts", lambda: data)
+
+    result = execute_command("finance accounts")
+
+    assert result.title == "Contas Firefly III"
+    assert result.dataframe is data
 
 
 def test_unknown_command_returns_friendly_message() -> None:
