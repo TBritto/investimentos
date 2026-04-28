@@ -14,6 +14,7 @@ Este projeto nao implementa recomendacao automatica de compra, venda ou manutenc
 - Metricas basicas de risco e retorno.
 - Analise local inicial de documentos financeiros.
 - Interface densa em tema escuro inspirada em terminais financeiros modernos, sem copiar marca, logo ou layout proprietario.
+- Base de testes com Pytest e GitHub Actions.
 
 ## Estrutura
 
@@ -31,7 +32,8 @@ Este projeto nao implementa recomendacao automatica de compra, venda ou manutenc
 │   ├── data/
 │   ├── storage/
 │   └── terminal/
-└── tests/
+├── tests/
+└── .github/workflows/tests.yml
 ```
 
 ## Requisitos
@@ -78,6 +80,8 @@ Para abrir a versao multipage diretamente:
 streamlit run app/streamlit_app.py
 ```
 
+A aplicacao abre por padrao em `http://localhost:8501`.
+
 ## Terminal de comandos
 
 A pagina `Terminal` possui parser, registry e historico de comandos da sessao.
@@ -104,7 +108,7 @@ A pagina `Carteira` permite upload de CSV com as colunas:
 ativo, quantidade, preco_medio, classe, data_compra
 ```
 
-`data_compra` e opcional. A pagina calcula `valor_investido`, percentual por ativo, percentual por classe e total investido.
+`data_compra` e opcional. A pagina calcula `valor_investido`, percentual por ativo, percentual por classe e total investido. Esta etapa nao busca preco atual e nao faz recomendacao de compra ou venda.
 
 ## Macro
 
@@ -113,6 +117,8 @@ A pagina `Macro` exibe Selic, IPCA e dolar usando as series publicas do Banco Ce
 ## Renda fixa
 
 A pagina `Renda Fixa` possui simulador educacional para prefixado, IPCA+ simplificado, percentual do CDI, valor presente aproximado e marcacao a mercado simplificada.
+
+Os resultados sao estimativas e nao representam recomendacao de compra ou venda.
 
 ## Relatorios IA
 
@@ -126,8 +132,10 @@ Os modulos `src/analytics/returns.py` e `src/analytics/risk.py` incluem retornos
 
 A interface usa `app/styles.py` para aplicar tema escuro, paineis compactos, sidebar com watchlist mockada, barra de comando global e tabelas compactas.
 
-## Testes
+## Testes e CI
 
 ```bash
 pytest
 ```
+
+O workflow `.github/workflows/tests.yml` executa a suite em push e pull request.
