@@ -86,6 +86,18 @@ streamlit run app/streamlit_app.py
 
 A aplicacao abre por padrao em `http://localhost:8501`.
 
+## Relatorios IA
+
+A pagina `Relatorios IA` permite upload de PDF, TXT ou Markdown para uma analise local inicial:
+
+- extracao de texto;
+- quebra em chunks;
+- busca por termo;
+- exibicao de trechos relevantes;
+- resumo heuristico baseado em termos financeiros como risco, receita, margem, divida, caixa, guidance, capex e dividendos.
+
+Esta versao nao usa API externa e nao inventa informacoes fora do documento. PDF requer a dependencia opcional `pypdf`; TXT e Markdown funcionam sem dependencia adicional.
+
 ## Testes
 
 ```bash
