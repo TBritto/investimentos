@@ -1,9 +1,6 @@
 streamlit
 openbb
-yfinance
 plotly
 pandas
 python-dotenv
-textblob
-kaleido
-reportlab
+pytest
