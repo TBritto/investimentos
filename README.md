@@ -24,6 +24,7 @@ Este projeto nao implementa recomendacao automatica de compra, venda ou manutenc
 ├── src/
 │   ├── ai/                 # Reservado para recursos futuros de IA
 │   ├── analytics/          # Indicadores, carteira e metricas
+│   ├── commands/           # Comandos do terminal
 │   ├── data/               # Clientes de dados externos
 │   ├── storage/            # Configuracao e persistencia local
 │   └── terminal/           # Interface Streamlit
@@ -85,6 +86,24 @@ streamlit run app/streamlit_app.py
 ```
 
 A aplicacao abre por padrao em `http://localhost:8501`.
+
+## Comandos de mercado
+
+A pagina `Terminal` aceita os comandos iniciais:
+
+```text
+quote AAPL
+compare AAPL MSFT
+```
+
+Esses comandos usam `src/data/openbb_client.py`, que encapsula as chamadas ao OpenBB.
+Para endpoints que exigem provider, configure as variaveis no `.env`, por exemplo:
+
+```env
+FMP_API_KEY=
+```
+
+Falhas de provider ou API sao convertidas em mensagens amigaveis pela excecao `OpenBBClientError`.
 
 ## Testes
 
