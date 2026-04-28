@@ -5,6 +5,8 @@ from typing import Any, Optional
 
 import pandas as pd
 
+from src.commands.macro import execute_macro_command
+from src.commands.quote_compare import execute_market_command
 from src.terminal.parser import CommandRequest
 
 
@@ -46,13 +48,12 @@ def macro_command(request: CommandRequest) -> CommandResult:
             message=f"Indicador macro ainda nao implementado: {indicator}.",
         )
 
-    return CommandResult(
-        title=f"Macro {indicator}",
-        message=(
-            "Conector de dados macro sera conectado pelo modulo Banco Central SGS. "
-            "Esta tela ja reconhece o comando."
-        ),
-    )
+    try:
+        result = execute_macro_command(request.raw)
+    except Exception as exc:
+        return CommandResult(title=f"Macro {indicator}", message=str(exc))
+
+    return CommandResult(title=result.title, dataframe=result.data)
 
 
 def quote_command(request: CommandRequest) -> CommandResult:
@@ -60,13 +61,12 @@ def quote_command(request: CommandRequest) -> CommandResult:
         return CommandResult(title="Cotacao", message="Use quote TICKER.")
 
     symbol = request.args[0].upper()
-    return CommandResult(
-        title=f"Cotacao {symbol}",
-        message=(
-            "Conector OpenBB para cotacao sera conectado pela camada de dados. "
-            "Esta tela ja reconhece o comando."
-        ),
-    )
+    try:
+        result = execute_market_command(request.raw)
+    except Exception as exc:
+        return CommandResult(title=f"Cotacao {symbol}", message=str(exc))
+
+    return CommandResult(title=result.title, dataframe=result.data)
 
 
 def compare_command(request: CommandRequest) -> CommandResult:
@@ -74,13 +74,12 @@ def compare_command(request: CommandRequest) -> CommandResult:
         return CommandResult(title="Comparacao", message="Use compare TICKER1 TICKER2 ...")
 
     symbols = ", ".join(symbol.upper() for symbol in request.args)
-    return CommandResult(
-        title=f"Comparacao {symbols}",
-        message=(
-            "Comparacao via OpenBB sera conectada pela camada de dados. "
-            "Esta tela ja reconhece o comando."
-        ),
-    )
+    try:
+        result = execute_market_command(request.raw)
+    except Exception as exc:
+        return CommandResult(title=f"Comparacao {symbols}", message=str(exc))
+
+    return CommandResult(title=result.title, dataframe=result.data)
 
 
 def portfolio_command(request: CommandRequest) -> CommandResult:
