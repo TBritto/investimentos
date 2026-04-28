@@ -105,6 +105,23 @@ As respostas sao normalizadas para as colunas `date`, `value` e `code`, com cach
 A pagina `Macro` exibe Selic, IPCA e dolar usando as series publicas do Banco Central SGS.
 Ela permite selecionar periodo de 1 ano, 5 anos ou maximo, mostra cards com a ultima leitura, graficos de linha e tabelas expansivas.
 
+## Terminal de comandos
+
+A pagina `Terminal` possui parser, registry e historico de comandos da sessao.
+Comandos reconhecidos inicialmente:
+
+```text
+help
+macro selic
+macro ipca
+macro dolar
+quote AAPL
+compare AAPL MSFT
+portfolio risco
+```
+
+Quando um comando depende de conector ainda nao integrado nesta branch, o terminal retorna uma mensagem amigavel indicando a etapa responsavel.
+
 ## Testes
 
 ```bash
