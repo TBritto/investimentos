@@ -136,6 +136,17 @@ ativo, quantidade, preco_medio, classe, data_compra
 
 `data_compra` e opcional. A pagina calcula `valor_investido`, percentual por ativo, percentual por classe e total investido. Esta etapa nao busca preco atual e nao faz recomendacao de compra ou venda.
 
+## Metricas de risco
+
+Os modulos `src/analytics/returns.py` e `src/analytics/risk.py` incluem funcoes puras para:
+
+- retornos periodicos;
+- retorno acumulado;
+- volatilidade anualizada;
+- drawdown e max drawdown;
+- matriz de correlacao;
+- Sharpe simplificado.
+
 ## Testes
 
 ```bash
