@@ -22,9 +22,16 @@ def get_sgs_series(
     code: int,
     start_date: Optional[str] = None,
     end_date: Optional[str] = None,
+    use_cache: bool = True,
 ) -> pd.DataFrame:
+    """Busca uma serie publica do Banco Central SGS.
+
+    Retorna um DataFrame normalizado com as colunas `date`, `value` e `code`.
+    Quando `use_cache=True`, usa e grava arquivos em `data/raw/bcb/` por codigo
+    e intervalo de datas.
+    """
     cache_path = _cache_path(code, start_date, end_date)
-    if cache_path.exists():
+    if use_cache and cache_path.exists():
         return _read_cache(cache_path)
 
     params = {"formato": "json"}
@@ -48,7 +55,8 @@ def get_sgs_series(
         raise BCBClientError(f"Resposta invalida do Banco Central para serie SGS {code}.") from exc
 
     data = _normalize_payload(payload, code)
-    _write_cache(data, cache_path)
+    if use_cache:
+        _write_cache(data, cache_path)
     return data
 
 
@@ -70,22 +78,33 @@ def _normalize_payload(payload: object, code: int) -> pd.DataFrame:
 
     data = pd.DataFrame(payload)
     if data.empty:
-        return pd.DataFrame(columns=["date", "value", "code"])
+        raise BCBClientError(f"Resposta vazia do Banco Central para serie SGS {code}.")
     if "data" not in data or "valor" not in data:
         raise BCBClientError(f"Campos obrigatorios ausentes na serie SGS {code}.")
 
+    raw_values = data["valor"].astype(str).str.replace(",", ".", regex=False)
     normalized = pd.DataFrame(
         {
             "date": pd.to_datetime(data["data"], format="%d/%m/%Y", errors="coerce"),
-            "value": pd.to_numeric(data["valor"].str.replace(",", ".", regex=False), errors="coerce"),
+            "value": pd.to_numeric(raw_values, errors="coerce"),
             "code": code,
         }
     )
-    return normalized.dropna(subset=["date", "value"]).reset_index(drop=True)
+    invalid_dates = int(normalized["date"].isna().sum())
+    invalid_values = int(normalized["value"].isna().sum())
+    if invalid_dates:
+        raise BCBClientError(f"Data invalida na resposta da serie SGS {code}.")
+    if invalid_values:
+        raise BCBClientError(f"Valor numerico invalido na resposta da serie SGS {code}.")
+
+    return normalized.reset_index(drop=True)
 
 
 def _format_date_for_bcb(value: str) -> str:
-    date = pd.to_datetime(value, errors="raise")
+    try:
+        date = pd.to_datetime(value, errors="raise")
+    except Exception as exc:
+        raise BCBClientError(f"Data invalida para consulta SGS: {value}. Use YYYY-MM-DD.") from exc
     return date.strftime("%d/%m/%Y")
 
 

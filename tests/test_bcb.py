@@ -54,6 +54,25 @@ def test_get_sgs_series_normalizes_payload_and_writes_cache(monkeypatch, tmp_pat
     pd.testing.assert_frame_equal(cached, data, check_dtype=False)
 
 
+def test_get_sgs_series_can_bypass_cache(monkeypatch, tmp_path):
+    calls = []
+
+    def fake_get(url, params, timeout):
+        calls.append(params)
+        return FakeResponse([{"data": "01/01/2024", "valor": str(len(calls))}])
+
+    monkeypatch.setattr(bcb, "CACHE_DIR", tmp_path)
+    monkeypatch.setattr(bcb.requests, "get", fake_get)
+
+    first = get_sgs_series(432, use_cache=False)
+    second = get_sgs_series(432, use_cache=False)
+
+    assert len(calls) == 2
+    assert first["value"].tolist() == [1.0]
+    assert second["value"].tolist() == [2.0]
+    assert not list(tmp_path.rglob("*.csv"))
+
+
 def test_get_sgs_series_raises_friendly_http_error(monkeypatch, tmp_path):
     def fake_get(url, params, timeout):
         return FakeResponse([], status_code=500)
@@ -62,6 +81,50 @@ def test_get_sgs_series_raises_friendly_http_error(monkeypatch, tmp_path):
     monkeypatch.setattr(bcb.requests, "get", fake_get)
 
     with pytest.raises(BCBClientError, match="Erro HTTP 500"):
+        get_sgs_series(432)
+
+
+def test_get_sgs_series_raises_for_empty_response(monkeypatch, tmp_path):
+    def fake_get(url, params, timeout):
+        return FakeResponse([])
+
+    monkeypatch.setattr(bcb, "CACHE_DIR", tmp_path)
+    monkeypatch.setattr(bcb.requests, "get", fake_get)
+
+    with pytest.raises(BCBClientError, match="Resposta vazia"):
+        get_sgs_series(432)
+
+
+def test_get_sgs_series_raises_for_invalid_request_date(monkeypatch, tmp_path):
+    def fail_if_called(url, params, timeout):
+        raise AssertionError("requests.get nao deveria ser chamado com data invalida")
+
+    monkeypatch.setattr(bcb, "CACHE_DIR", tmp_path)
+    monkeypatch.setattr(bcb.requests, "get", fail_if_called)
+
+    with pytest.raises(BCBClientError, match="Data invalida"):
+        get_sgs_series(432, start_date="nao-e-data")
+
+
+def test_get_sgs_series_raises_for_invalid_payload_date(monkeypatch, tmp_path):
+    def fake_get(url, params, timeout):
+        return FakeResponse([{"data": "2024-01-01", "valor": "10,5"}])
+
+    monkeypatch.setattr(bcb, "CACHE_DIR", tmp_path)
+    monkeypatch.setattr(bcb.requests, "get", fake_get)
+
+    with pytest.raises(BCBClientError, match="Data invalida"):
+        get_sgs_series(432)
+
+
+def test_get_sgs_series_raises_for_invalid_numeric_value(monkeypatch, tmp_path):
+    def fake_get(url, params, timeout):
+        return FakeResponse([{"data": "01/01/2024", "valor": "abc"}])
+
+    monkeypatch.setattr(bcb, "CACHE_DIR", tmp_path)
+    monkeypatch.setattr(bcb.requests, "get", fake_get)
+
+    with pytest.raises(BCBClientError, match="Valor numerico invalido"):
         get_sgs_series(432)
 
 
