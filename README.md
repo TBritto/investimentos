@@ -1,20 +1,77 @@
 # Terminal de Investimentos
 
-MVP em Streamlit para consulta e analise de ativos em portugues do Brasil. A base foi reorganizada para separar aplicacao, dados, analytics, terminal, armazenamento e recursos futuros de IA.
+MVP em Streamlit para consulta, organizacao e analise educacional de dados financeiros em portugues do Brasil. O projeto combina dados publicos, OpenBB, uploads locais e calculos analiticos para apoiar investigacao e acompanhamento de investimentos.
 
-Este projeto nao implementa recomendacao automatica de compra, venda ou manutencao de ativos. O conteudo exibido e informativo e educacional.
+> Ferramenta de apoio a decisao. Este projeto nao faz recomendacao de compra, venda ou manutencao de ativos.
 
-## Escopo do MVP
+## Funcionalidades do MVP
 
-- Terminal de comandos com historico de sessao.
-- Series macroeconomicas publicas do Banco Central SGS.
-- Camada isolada para consultas de mercado via OpenBB.
-- Upload de carteira CSV e composicao por ativo/classe.
-- Simulador educacional de renda fixa e marcacao a mercado simplificada.
-- Metricas basicas de risco e retorno.
-- Analise local inicial de documentos financeiros.
-- Interface densa em tema escuro inspirada em terminais financeiros modernos, sem copiar marca, logo ou layout proprietario.
-- Base de testes com Pytest e GitHub Actions.
+- Terminal de comandos com parser, registry e historico de sessao.
+- Consulta macroeconomica via Banco Central SGS: Selic, IPCA e dolar.
+- Camada isolada para OpenBB, incluindo cotacao, historico e comparacao de ativos.
+- Upload de carteira via CSV e composicao por ativo/classe.
+- Metricas de risco e retorno: retornos, acumulado, volatilidade, drawdown, correlacao e Sharpe.
+- Simulador educacional de renda fixa: prefixado, IPCA+ e percentual CDI.
+- Analise local de documentos financeiros sem API externa.
+- Visual escuro e denso inspirado em terminais financeiros modernos, sem copiar marca ou layout proprietario.
+- CI com pytest em push e pull request.
+
+## Instalacao
+
+Requisitos:
+
+- Python 3.11+
+- pip
+
+Crie e ative um ambiente virtual:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+```
+
+No Windows PowerShell:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+Instale as dependencias:
+
+```bash
+pip install -r requirements.txt
+```
+
+Crie o `.env` a partir do exemplo:
+
+```bash
+cp .env.example .env
+```
+
+Variaveis atuais:
+
+```env
+FMP_API_KEY=
+```
+
+Nao coloque chaves ou segredos no codigo.
+
+## Execucao
+
+Aplicacao principal:
+
+```bash
+streamlit run app.py
+```
+
+Versao multipage:
+
+```bash
+streamlit run app/streamlit_app.py
+```
+
+Por padrao, o Streamlit abre em `http://localhost:8501`.
 
 ## Estrutura
 
@@ -25,6 +82,10 @@ Este projeto nao implementa recomendacao automatica de compra, venda ou manutenc
 │   ├── streamlit_app.py
 │   ├── styles.py
 │   └── pages/
+├── docs/
+│   ├── architecture.md
+│   ├── commands.md
+│   └── data_sources.md
 ├── src/
 │   ├── ai/
 │   ├── analytics/
@@ -33,58 +94,13 @@ Este projeto nao implementa recomendacao automatica de compra, venda ou manutenc
 │   ├── storage/
 │   └── terminal/
 ├── tests/
-└── .github/workflows/tests.yml
+├── pyproject.toml
+└── requirements.txt
 ```
 
-## Requisitos
+## Comandos
 
-- Python 3.11+
-- Streamlit, Pandas, Plotly, Requests, Pydantic, Pytest e Python-dotenv
-- OpenBB opcional para comandos de mercado
-
-## Configuracao
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-cp .env.example .env
-```
-
-No Windows PowerShell:
-
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-Copy-Item .env.example .env
-```
-
-Preencha apenas as chaves que voce for usar:
-
-```env
-FMP_API_KEY=
-```
-
-Nao coloque chaves no codigo-fonte.
-
-## Executando
-
-```bash
-streamlit run app.py
-```
-
-Para abrir a versao multipage diretamente:
-
-```bash
-streamlit run app/streamlit_app.py
-```
-
-A aplicacao abre por padrao em `http://localhost:8501`.
-
-## Terminal de comandos
-
-A pagina `Terminal` possui parser, registry e historico de comandos da sessao.
+Comandos reconhecidos no terminal:
 
 ```text
 help
@@ -96,46 +112,42 @@ compare AAPL MSFT
 portfolio risco
 ```
 
-Os comandos macro usam series publicas do Banco Central SGS via `src/data/bcb.py`, com cache local em `data/raw/bcb/`.
+Veja detalhes em [docs/commands.md](docs/commands.md).
 
-Os comandos `quote` e `compare` usam `src/data/openbb_client.py`, que encapsula as chamadas ao OpenBB e converte falhas de provider/API em mensagens amigaveis.
+## Fontes de Dados
 
-## Carteira CSV
+- Banco Central SGS para Selic, IPCA e dolar.
+- OpenBB para cotacoes, historicos e fundamentos quando providers estiverem configurados.
+- CSV local para composicao de carteira.
+- Arquivos PDF/TXT/Markdown enviados pelo usuario para analise local.
 
-A pagina `Carteira` permite upload de CSV com as colunas:
+Veja detalhes em [docs/data_sources.md](docs/data_sources.md).
 
-```text
-ativo, quantidade, preco_medio, classe, data_compra
-```
+## Limites Conhecidos
 
-`data_compra` e opcional. A pagina calcula `valor_investido`, percentual por ativo, percentual por classe e total investido. Esta etapa nao busca preco atual e nao faz recomendacao de compra ou venda.
+- Resultados sao informativos e educacionais.
+- Renda fixa usa aproximacoes simplificadas.
+- Analise de documentos e heuristica, sem LLM por padrao.
+- PDF depende de `pypdf` quando usado.
+- Algumas fontes OpenBB podem exigir provider/API key.
+- Testes evitam internet; chamadas externas devem ser mockadas.
 
-## Macro
+## Roadmap
 
-A pagina `Macro` exibe Selic, IPCA e dolar usando as series publicas do Banco Central SGS. Ela permite selecionar periodo de 1 ano, 5 anos ou maximo, mostra cards com a ultima leitura, graficos de linha e tabelas expansivas.
+- Expandir dashboard de carteira com risco, drawdown e comparativos.
+- Adicionar conectores de CVM, Tesouro Direto e B3 quando as fontes forem definidas.
+- Melhorar relatorios com LLM opcional via variavel de ambiente.
+- Adicionar lint/type-check ao CI.
+- Criar fluxo de deploy para ambiente Streamlit.
 
-## Renda fixa
-
-A pagina `Renda Fixa` possui simulador educacional para prefixado, IPCA+ simplificado, percentual do CDI, valor presente aproximado e marcacao a mercado simplificada.
-
-Os resultados sao estimativas e nao representam recomendacao de compra ou venda.
-
-## Relatorios IA
-
-A pagina `Relatorios IA` permite upload de PDF, TXT ou Markdown para extracao de texto, chunks, busca por termo, trechos relevantes e resumo heuristico local. Esta versao nao usa API externa e nao inventa informacoes fora do documento.
-
-## Metricas de risco
-
-Os modulos `src/analytics/returns.py` e `src/analytics/risk.py` incluem retornos periodicos, retorno acumulado, volatilidade anualizada, drawdown, matriz de correlacao e Sharpe simplificado.
-
-## Visual terminal
-
-A interface usa `app/styles.py` para aplicar tema escuro, paineis compactos, sidebar com watchlist mockada, barra de comando global e tabelas compactas.
-
-## Testes e CI
+## Testes
 
 ```bash
 pytest
 ```
 
-O workflow `.github/workflows/tests.yml` executa a suite em push e pull request.
+O CI em `.github/workflows/tests.yml` executa `pytest` em push e pull request.
+
+## Arquitetura
+
+Veja [docs/architecture.md](docs/architecture.md).
