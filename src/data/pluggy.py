@@ -9,6 +9,7 @@ import requests
 
 
 PLUGGY_BASE_URL = "https://api.pluggy.ai"
+PLUGGY_CONNECT_URL = "https://connect.pluggy.ai"
 
 
 class PluggyClientError(RuntimeError):
@@ -49,6 +50,17 @@ def create_connect_token(
     if not connect_token:
         raise PluggyClientError("Resposta da Pluggy sem connect token.")
     return str(connect_token)
+
+
+def is_configured() -> bool:
+    return bool(os.getenv("PLUGGY_CLIENT_ID", "").strip() and os.getenv("PLUGGY_CLIENT_SECRET", "").strip())
+
+
+def get_connect_widget_url(connect_token: str) -> str:
+    if not connect_token:
+        raise PluggyClientError("Informe um connect token para abrir o widget Pluggy.")
+    base_url = os.getenv("PLUGGY_CONNECT_URL", PLUGGY_CONNECT_URL).strip() or PLUGGY_CONNECT_URL
+    return f"{base_url.rstrip('/')}/?connect_token={connect_token}"
 
 
 def get_items() -> pd.DataFrame:

@@ -216,6 +216,7 @@ Variavel opcional para sandbox/testes:
 
 ```env
 PLUGGY_BASE_URL=
+PLUGGY_CONNECT_URL=
 ```
 
 Funcoes principais:
@@ -226,6 +227,7 @@ create_connect_token(client_user_id=None, item_id=None, oauth_redirect_url=None,
 get_items()
 get_accounts(item_id=None)
 get_transactions(account_id, from_date=None, to_date=None, page_size=100)
+get_connect_widget_url(connect_token)
 ```
 
 Comandos no terminal:
@@ -239,6 +241,13 @@ openfinance transactions ACCOUNT_ID
 ```
 
 Credenciais Pluggy devem ficar apenas no `.env`. O fluxo de conexao bancaria exige consentimento do usuario via Pluggy Connect Widget; o projeto nao guarda senha de banco.
+
+A pagina `Open Finance` permite:
+
+- verificar se a configuracao esta pronta;
+- gerar connect token de curta duracao;
+- abrir o Pluggy Connect Widget;
+- listar conexoes, contas e transacoes apos consentimento.
 
 ## CSV de Carteira
 
