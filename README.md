@@ -53,6 +53,7 @@ Variaveis atuais:
 
 ```env
 FMP_API_KEY=
+OPENBB_PROVIDER=
 ```
 
 Nao coloque chaves ou segredos no codigo.
