@@ -86,6 +86,23 @@ streamlit run app/streamlit_app.py
 
 A aplicacao abre por padrao em `http://localhost:8501`.
 
+## Terminal de comandos
+
+A pagina `Terminal` possui parser, registry e historico de comandos da sessao.
+Comandos reconhecidos inicialmente:
+
+```text
+help
+macro selic
+macro ipca
+macro dolar
+quote AAPL
+compare AAPL MSFT
+portfolio risco
+```
+
+Quando um comando depende de conector ainda nao integrado nesta branch, o terminal retorna uma mensagem amigavel indicando a etapa responsavel.
+
 ## Testes
 
 ```bash
