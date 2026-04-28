@@ -1,10 +1,11 @@
 import streamlit as st
 
+from app.styles import apply_terminal_style, render_page_header
 from src.analytics.fixed_income import simulate_fixed_income
 
 
-st.title("Renda Fixa")
-st.caption("Simulador educacional com marcacao a mercado simplificada.")
+apply_terminal_style()
+render_page_header("Renda Fixa", "Simulador educacional com marcacao a mercado simplificada.")
 
 st.warning(
     "Esta e uma simulacao aproximada para fins educacionais. "

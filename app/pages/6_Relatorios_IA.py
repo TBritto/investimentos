@@ -1,12 +1,13 @@
 import streamlit as st
 
+from app.styles import apply_terminal_style, render_page_header
 from src.ai.document_loader import DocumentLoaderError, load_document
 from src.ai.prompts import FUTURE_OPENAI_ENV_VAR
 from src.ai.rag import answer_from_document, chunk_text, summarize_document
 
 
-st.title("Relatorios IA")
-st.caption("Analise local de documentos financeiros, sem API externa.")
+apply_terminal_style()
+render_page_header("Relatorios IA", "Analise local de documentos financeiros, sem API externa.")
 
 st.info(
     f"Esta versao usa busca e resumo heuristico local. Futuramente pode usar LLM via `{FUTURE_OPENAI_ENV_VAR}`, "
