@@ -121,6 +121,18 @@ ativo, quantidade, preco_medio, classe, data_compra
 
 `data_compra` e opcional. A pagina calcula `valor_investido`, percentual por ativo, percentual por classe e total investido. Esta etapa nao busca preco atual e nao faz recomendacao de compra ou venda.
 
+## Renda fixa
+
+A pagina `Renda Fixa` possui um simulador educacional para:
+
+- titulo prefixado;
+- IPCA+ simplificado;
+- percentual do CDI;
+- valor presente aproximado;
+- marcacao a mercado simplificada.
+
+Os resultados sao estimativas e nao representam recomendacao de compra ou venda.
+
 ## Testes
 
 ```bash
