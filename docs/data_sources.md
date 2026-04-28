@@ -84,6 +84,47 @@ date, symbol, open, high, low, close, volume
 
 Falhas de provider/API devem ser convertidas para mensagens amigaveis.
 
+## CVM Dados Abertos
+
+Usado para cadastro e informe diario de fundos de investimento com dados publicos da CVM.
+
+Modulo principal:
+
+```text
+src/data/cvm.py
+```
+
+Endpoints publicos usados:
+
+```text
+https://dados.cvm.gov.br/dados/FI/CAD/DADOS/cad_fi.csv
+https://dados.cvm.gov.br/dados/FI/DOC/INF_DIARIO/DADOS/inf_diario_fi_YYYYMM.zip
+```
+
+Funcoes principais:
+
+```text
+normalize_cnpj(cnpj)
+get_fund_registry(use_cache=True)
+search_funds(query)
+find_fund_by_cnpj(cnpj)
+get_fund_daily_report(year, month, use_cache=True)
+```
+
+O cache local fica em:
+
+```text
+data/raw/cvm/
+```
+
+O informe diario e normalizado para:
+
+```text
+cnpj_fundo, data_competencia, valor_cota, patrimonio_liquido, captacao_dia, resgate_dia, numero_cotistas
+```
+
+O terminal reconhece `fund CNPJ` para consultar cadastro de um fundo por CNPJ.
+
 ## CSV de Carteira
 
 Upload local na pagina Carteira.

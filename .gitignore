@@ -3,7 +3,6 @@
 __pycache__/
 .pytest_cache/
 *.pyc
-data/raw/bcb/**/*.csv
 data/raw/**/*.csv
 data/raw/**/*.zip
 data/raw/**/*.json

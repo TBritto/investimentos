@@ -7,6 +7,7 @@ import pandas as pd
 
 from src.commands.macro import execute_macro_command
 from src.commands.quote_compare import execute_market_command
+from src.data.cvm import find_fund_by_cnpj
 from src.terminal.parser import CommandRequest
 
 
@@ -26,6 +27,7 @@ Comandos disponiveis:
 - macro dolar
 - quote TICKER
 - compare TICKER1 TICKER2 ...
+- fund CNPJ
 - portfolio risco
 """.strip()
 
@@ -90,6 +92,22 @@ def portfolio_command(request: CommandRequest) -> CommandResult:
         )
 
     return CommandResult(title="Portfolio", message="Use portfolio risco.")
+
+
+def fund_command(request: CommandRequest) -> CommandResult:
+    if len(request.args) != 1:
+        return CommandResult(title="Fundos CVM", message="Use fund CNPJ.")
+
+    cnpj = request.args[0]
+    try:
+        data = find_fund_by_cnpj(cnpj)
+    except Exception as exc:
+        return CommandResult(title="Fundos CVM", message=str(exc))
+
+    if data.empty:
+        return CommandResult(title="Fundos CVM", message="Nenhum fundo encontrado para o CNPJ informado.")
+
+    return CommandResult(title="Fundos CVM", dataframe=data)
 
 
 def not_implemented_command(request: CommandRequest) -> CommandResult:
