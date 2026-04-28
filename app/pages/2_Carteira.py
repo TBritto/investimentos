@@ -2,11 +2,12 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
+from app.styles import apply_terminal_style, render_page_header
 from src.analytics.portfolio import calculate_portfolio_composition
 
 
-st.title("Carteira")
-st.caption("Upload de CSV para visualizar composicao da carteira.")
+apply_terminal_style()
+render_page_header("Carteira", "Upload de CSV e composicao consolidada por ativo e classe.")
 
 uploaded_file = st.file_uploader("CSV da carteira", type=["csv"])
 
@@ -19,7 +20,10 @@ if uploaded_file is not None:
     except Exception as exc:
         st.error(str(exc))
     else:
-        st.metric("Total investido", f"R$ {total_invested:,.2f}")
+        count_col, total_col, class_col = st.columns(3)
+        count_col.metric("Ativos", len(by_asset))
+        total_col.metric("Total investido", f"R$ {total_invested:,.2f}")
+        class_col.metric("Classes", len(by_class))
 
         st.subheader("Tabela normalizada")
         st.dataframe(normalized, use_container_width=True)

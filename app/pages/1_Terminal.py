@@ -1,15 +1,16 @@
 import streamlit as st
 
+from app.styles import apply_terminal_style, render_page_header
 from src.terminal.registry import execute_command
 
 
-st.title("Terminal")
-st.caption("Terminal de comandos inicial do MVP.")
+apply_terminal_style()
+render_page_header("Terminal", "Comandos reconhecidos, historico de sessao e respostas compactas.")
 
 if "terminal_history" not in st.session_state:
     st.session_state["terminal_history"] = []
 
-command = st.text_input("Comando", value="help")
+command = st.text_input("Comando", value="help", key="terminal_command_input")
 
 if st.button("Executar"):
     try:
