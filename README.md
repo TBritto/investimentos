@@ -164,3 +164,5 @@ Os resultados sao estimativas e nao representam recomendacao de compra ou venda.
 ```bash
 pytest
 ```
+
+O CI em `.github/workflows/tests.yml` executa `pytest` em push e pull request. Os testes nao dependem de internet; chamadas externas devem ser mockadas.
