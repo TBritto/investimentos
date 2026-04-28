@@ -1,4 +1,4 @@
-from src.terminal.app import main
+from app.streamlit_app import main
 
 
 if __name__ == "__main__":
