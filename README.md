@@ -150,6 +150,17 @@ A pagina `Relatorios IA` permite upload de PDF, TXT ou Markdown para uma analise
 
 Esta versao nao usa API externa e nao inventa informacoes fora do documento. PDF requer a dependencia opcional `pypdf`; TXT e Markdown funcionam sem dependencia adicional.
 
+## Metricas de risco
+
+Os modulos `src/analytics/returns.py` e `src/analytics/risk.py` incluem funcoes puras para:
+
+- retornos periodicos;
+- retorno acumulado;
+- volatilidade anualizada;
+- drawdown e max drawdown;
+- matriz de correlacao;
+- Sharpe simplificado.
+
 ## Testes
 
 ```bash
