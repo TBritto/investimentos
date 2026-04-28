@@ -62,7 +62,24 @@ src/data/openbb_client.py
 Variavel opcional:
 
 ```env
+OPENBB_PROVIDER=
 FMP_API_KEY=
+```
+
+`OPENBB_PROVIDER` define o provider padrao usado pela camada `src/data/openbb_client.py` quando um provider nao for informado explicitamente. Chaves de providers, como `FMP_API_KEY`, devem ficar apenas no `.env` local e nunca no codigo.
+
+As funcoes principais sao:
+
+```text
+get_equity_quote(symbol)
+get_equity_history(symbol, start_date=None, end_date=None, provider=None)
+compare_equities(symbols, start_date=None, end_date=None, provider=None)
+```
+
+As respostas sao normalizadas, quando as colunas existirem na fonte, para:
+
+```text
+date, symbol, open, high, low, close, volume
 ```
 
 Falhas de provider/API devem ser convertidas para mensagens amigaveis.
