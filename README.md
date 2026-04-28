@@ -147,6 +147,18 @@ Os modulos `src/analytics/returns.py` e `src/analytics/risk.py` incluem funcoes 
 - matriz de correlacao;
 - Sharpe simplificado.
 
+## Renda fixa
+
+A pagina `Renda Fixa` possui um simulador educacional para:
+
+- titulo prefixado;
+- IPCA+ simplificado;
+- percentual do CDI;
+- valor presente aproximado;
+- marcacao a mercado simplificada.
+
+Os resultados sao estimativas e nao representam recomendacao de compra ou venda.
+
 ## Testes
 
 ```bash
