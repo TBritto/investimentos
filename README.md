@@ -17,6 +17,9 @@ Este projeto nao implementa recomendacao automatica de compra, venda ou manutenc
 ```text
 .
 ├── app.py                  # Entrada do Streamlit
+├── app/
+│   ├── streamlit_app.py    # Entrada multipage do Streamlit
+│   └── pages/              # Paginas placeholder do MVP
 ├── pyproject.toml          # Metadados e configuracao de testes
 ├── src/
 │   ├── ai/                 # Reservado para recursos futuros de IA
@@ -30,6 +33,7 @@ Este projeto nao implementa recomendacao automatica de compra, venda ou manutenc
 ## Requisitos
 
 - Python 3.11+
+- Streamlit, Pandas, Plotly, DuckDB, PyArrow, Requests, Pydantic, Pytest, Python-dotenv e OpenBB
 - Uma chave FMP opcional para endpoints fundamentalistas do OpenBB
 
 ## Configuracao
@@ -72,6 +76,12 @@ Nao coloque chaves no codigo-fonte.
 
 ```bash
 streamlit run app.py
+```
+
+Para abrir a versao multipage com placeholders da Issue 1:
+
+```bash
+streamlit run app/streamlit_app.py
 ```
 
 A aplicacao abre por padrao em `http://localhost:8501`.

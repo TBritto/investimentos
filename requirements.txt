@@ -2,5 +2,9 @@ streamlit
 openbb
 plotly
 pandas
+duckdb
+pyarrow
+requests
+pydantic
 python-dotenv
 pytest
