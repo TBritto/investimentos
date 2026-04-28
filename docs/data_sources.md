@@ -47,8 +47,6 @@ O cache local fica em:
 data/raw/bcb/
 ```
 
-Arquivos CSV de cache nao devem ser versionados.
-
 ## OpenBB
 
 Usado para cotacoes, historico de ativos, comparacao e dados fundamentalistas quando provider estiver configurado.
@@ -59,7 +57,7 @@ Modulo principal:
 src/data/openbb_client.py
 ```
 
-Variavel opcional:
+Variaveis opcionais:
 
 ```env
 OPENBB_PROVIDER=
@@ -81,8 +79,6 @@ As respostas sao normalizadas, quando as colunas existirem na fonte, para:
 ```text
 date, symbol, open, high, low, close, volume
 ```
-
-Falhas de provider/API devem ser convertidas para mensagens amigaveis.
 
 ## CVM Dados Abertos
 
@@ -124,6 +120,43 @@ cnpj_fundo, data_competencia, valor_cota, patrimonio_liquido, captacao_dia, resg
 ```
 
 O terminal reconhece `fund CNPJ` para consultar cadastro de um fundo por CNPJ.
+
+## Tesouro Direto
+
+Usado para precos e taxas publicos de titulos do Tesouro Direto.
+
+Modulo principal:
+
+```text
+src/data/tesouro.py
+```
+
+Fonte publica:
+
+```text
+https://www.tesourotransparente.gov.br/ckan/api/3/action/package_show?id=taxas-dos-titulos-ofertados-pelo-tesouro-direto
+```
+
+O recurso CSV oficial `precotaxatesourodireto.csv` e baixado a partir dos metadados CKAN e cacheado localmente em:
+
+```text
+data/raw/tesouro/
+```
+
+Funcoes principais:
+
+```text
+get_treasury_bonds(use_cache=True)
+get_treasury_price_history(year=None, use_cache=True)
+normalize_treasury_bonds(df)
+search_treasury_bonds(query)
+```
+
+As colunas sao normalizadas, quando disponiveis, para:
+
+```text
+nome, tipo, vencimento, taxa_compra, taxa_venda, preco_compra, preco_venda, data_base
+```
 
 ## CSV de Carteira
 
