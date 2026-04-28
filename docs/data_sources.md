@@ -1,5 +1,26 @@
 # Fontes de Dados
 
+## Camada comum
+
+Integrações externas devem preferir os helpers comuns para padronizar cache, HTTP e erros amigáveis:
+
+```text
+src/data/errors.py
+src/data/http.py
+src/storage/cache.py
+```
+
+Exceções comuns:
+
+```text
+DataSourceError
+DataUnavailableError
+DataParsingError
+DataValidationError
+```
+
+O cache local fica por padrão em `data/raw/<fonte>/`, com nomes de arquivos sanitizados por `get_cache_path`.
+
 ## Banco Central SGS
 
 Usado para series publicas macroeconomicas:

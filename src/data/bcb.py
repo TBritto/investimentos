@@ -1,11 +1,16 @@
 from __future__ import annotations
 
+import json
+import io
 from pathlib import Path
 from typing import Optional
+from urllib.parse import urlencode
 
 import pandas as pd
-import requests
 
+from src.data.errors import DataParsingError, DataSourceError, DataValidationError
+from src.data.http import get_url
+from src.storage.cache import cache_exists, load_cache, save_cache
 
 BCB_SGS_URL = "https://api.bcb.gov.br/dados/serie/bcdata.sgs.{code}/dados"
 CACHE_DIR = Path("data/raw/bcb")
@@ -14,7 +19,7 @@ IPCA_CODE = 433
 USDBRL_CODE = 1
 
 
-class BCBClientError(RuntimeError):
+class BCBClientError(DataSourceError):
     """Erro amigavel para falhas no Banco Central SGS."""
 
 
@@ -24,7 +29,7 @@ def get_sgs_series(
     end_date: Optional[str] = None,
 ) -> pd.DataFrame:
     cache_path = _cache_path(code, start_date, end_date)
-    if cache_path.exists():
+    if cache_exists(str(cache_path)):
         return _read_cache(cache_path)
 
     params = {"formato": "json"}
@@ -33,18 +38,13 @@ def get_sgs_series(
     if end_date:
         params["dataFinal"] = _format_date_for_bcb(end_date)
 
-    try:
-        response = requests.get(BCB_SGS_URL.format(code=code), params=params, timeout=30)
-        response.raise_for_status()
-    except requests.HTTPError as exc:
-        status_code = exc.response.status_code if exc.response is not None else "desconhecido"
-        raise BCBClientError(f"Erro HTTP {status_code} ao buscar serie SGS {code}.") from exc
-    except requests.RequestException as exc:
-        raise BCBClientError(f"Nao foi possivel buscar serie SGS {code}: {exc}") from exc
+    url = f"{BCB_SGS_URL.format(code=code)}?{urlencode(params)}"
 
     try:
-        payload = response.json()
-    except ValueError as exc:
+        payload = json.loads(get_url(url, timeout=30).decode("utf-8"))
+    except DataSourceError as exc:
+        raise BCBClientError(f"Nao foi possivel buscar serie SGS {code}: {exc}") from exc
+    except (UnicodeDecodeError, ValueError) as exc:
         raise BCBClientError(f"Resposta invalida do Banco Central para serie SGS {code}.") from exc
 
     data = _normalize_payload(payload, code)
@@ -66,13 +66,13 @@ def get_usdbrl(start_date: Optional[str] = None, end_date: Optional[str] = None)
 
 def _normalize_payload(payload: object, code: int) -> pd.DataFrame:
     if not isinstance(payload, list):
-        raise BCBClientError(f"Formato inesperado para serie SGS {code}.")
+        raise DataParsingError(f"Formato inesperado para serie SGS {code}.")
 
     data = pd.DataFrame(payload)
     if data.empty:
         return pd.DataFrame(columns=["date", "value", "code"])
     if "data" not in data or "valor" not in data:
-        raise BCBClientError(f"Campos obrigatorios ausentes na serie SGS {code}.")
+        raise DataValidationError(f"Campos obrigatorios ausentes na serie SGS {code}.")
 
     normalized = pd.DataFrame(
         {
@@ -100,7 +100,13 @@ def _safe_cache_token(value: str) -> str:
 
 
 def _read_cache(path: Path) -> pd.DataFrame:
-    data = pd.read_csv(path)
+    cached = load_cache(str(path))
+    if cached is None:
+        raise BCBClientError(f"Cache ausente para serie SGS: {path}")
+    if isinstance(cached, bytes):
+        data = pd.read_csv(io.BytesIO(cached))
+    else:
+        data = pd.read_csv(io.StringIO(cached))
     data["date"] = pd.to_datetime(data["date"])
     data["value"] = pd.to_numeric(data["value"])
     data["code"] = pd.to_numeric(data["code"]).astype(int)
@@ -108,5 +114,4 @@ def _read_cache(path: Path) -> pd.DataFrame:
 
 
 def _write_cache(data: pd.DataFrame, path: Path) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    data.to_csv(path, index=False)
+    save_cache(str(path), data.to_csv(index=False))
