@@ -86,6 +86,16 @@ streamlit run app/streamlit_app.py
 
 A aplicacao abre por padrao em `http://localhost:8501`.
 
+## Carteira CSV
+
+A pagina `Carteira` permite upload de um CSV com as colunas:
+
+```text
+ativo, quantidade, preco_medio, classe, data_compra
+```
+
+`data_compra` e opcional. A pagina calcula `valor_investido`, percentual por ativo, percentual por classe e total investido. Esta etapa nao busca preco atual e nao faz recomendacao de compra ou venda.
+
 ## Testes
 
 ```bash
