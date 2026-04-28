@@ -1,9 +1,10 @@
 streamlit
 openbb
-yfinance
 plotly
 pandas
+duckdb
+pyarrow
+requests
+pydantic
 python-dotenv
-textblob
-kaleido
-reportlab
+pytest

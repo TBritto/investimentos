@@ -1,102 +1,153 @@
-# OpenBB Financial Dashboard
+# Terminal de Investimentos
 
-## Overview
+MVP em Streamlit para consulta, organizacao e analise educacional de dados financeiros em portugues do Brasil. O projeto combina dados publicos, OpenBB, uploads locais e calculos analiticos para apoiar investigacao e acompanhamento de investimentos.
 
-This project is a Streamlit-based financial dashboard that leverages the OpenBB SDK to provide comprehensive stock analysis, portfolio simulation, and financial data visualization. The dashboard offers the following features:
+> Ferramenta de apoio a decisao. Este projeto nao faz recomendacao de compra, venda ou manutencao de ativos.
 
-- Stock price analysis with interactive charts
-- Technical indicators including Moving Averages, Bollinger Bands, and RSI
-- Fundamental analysis with financial statements and key ratios
-- Portfolio simulation with cumulative returns and risk metrics
-- Multiple data provider options
+## Funcionalidades do MVP
 
-## Prerequisites
+- Terminal de comandos com parser, registry e historico de sessao.
+- Consulta macroeconomica via Banco Central SGS: Selic, IPCA e dolar.
+- Camada isolada para OpenBB, incluindo cotacao, historico e comparacao de ativos.
+- Upload de carteira via CSV e composicao por ativo/classe.
+- Metricas de risco e retorno: retornos, acumulado, volatilidade, drawdown, correlacao e Sharpe.
+- Simulador educacional de renda fixa: prefixado, IPCA+ e percentual CDI.
+- Analise local de documentos financeiros sem API externa.
+- Visual escuro e denso inspirado em terminais financeiros modernos, sem copiar marca ou layout proprietario.
+- CI com pytest em push e pull request.
+
+## Instalacao
+
+Requisitos:
 
 - Python 3.11+
-- pip (Python package manager)
+- pip
 
-## Installation
+Crie e ative um ambiente virtual:
 
-1. Clone the repository:
-   ```
-   git clone https://github.com/Yash-1511/openbb-dashboard.git
-   cd openbb-dashboard
-   ```
+```bash
+python -m venv .venv
+source .venv/bin/activate
+```
 
-2. Create a virtual environment (optional but recommended):
-   ```
-   python -m venv venv
-   source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
-   ```
+No Windows PowerShell:
 
-3. Install the required packages:
-   ```
-   pip install -r requirements.txt
-   ```
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
 
-## Setting Up Environment Variables
+Instale as dependencias:
 
-1. Create a `.env` file in the project root directory.
+```bash
+pip install -r requirements.txt
+```
 
-2. Add your Financial Modeling Prep (FMP) API key to the `.env` file:
-   ```
-   FMP_API_KEY=your_fmp_api_key_here
-   ```
+Crie o `.env` a partir do exemplo:
 
-   You can obtain an API key by signing up at [Financial Modeling Prep](https://financialmodelingprep.com/developer/docs/).
+```bash
+cp .env.example .env
+```
 
-## Running the Application
+Variaveis atuais:
 
-1. Ensure you're in the project directory and your virtual environment is activated (if you're using one).
+```env
+FMP_API_KEY=
+```
 
-2. Run the Streamlit app:
-   ```
-   streamlit run app.py
-   ```
+Nao coloque chaves ou segredos no codigo.
 
-3. Open your web browser and go to `http://localhost:8501` to view the dashboard.
+## Execucao
 
-## Using the Dashboard
+Aplicacao principal:
 
-1. **Stock Analysis**:
-   - Enter a stock ticker in the sidebar.
-   - Select a date range for analysis.
-   - Choose a data provider from the available options.
+```bash
+streamlit run app.py
+```
 
-2. **Technical Analysis**:
-   - View the closing price chart.
-   - Select moving average periods to display on the chart.
-   - Analyze Bollinger Bands and RSI indicators.
+Versao multipage:
 
-3. **Fundamental Analysis**:
-   - Select a financial statement type (Income Statement, Balance Sheet, or Cash Flow).
-   - View key financial ratios for the selected stock.
+```bash
+streamlit run app/streamlit_app.py
+```
 
-4. **Portfolio Simulation**:
-   - Enter multiple stock tickers separated by commas.
-   - Specify the weight for each stock in the portfolio.
-   - View cumulative returns and risk metrics for the simulated portfolio.
+Por padrao, o Streamlit abre em `http://localhost:8501`.
 
+## Estrutura
 
-Ensure you have the necessary API keys for the data provider you wish to use.
+```text
+.
+├── app.py
+├── app/
+│   ├── streamlit_app.py
+│   ├── styles.py
+│   └── pages/
+├── docs/
+│   ├── architecture.md
+│   ├── commands.md
+│   └── data_sources.md
+├── src/
+│   ├── ai/
+│   ├── analytics/
+│   ├── commands/
+│   ├── data/
+│   ├── storage/
+│   └── terminal/
+├── tests/
+├── pyproject.toml
+└── requirements.txt
+```
 
-## Contributing
+## Comandos
 
-Contributions to improve the dashboard are welcome. Please follow these steps:
+Comandos reconhecidos no terminal:
 
-1. Fork the repository.
-2. Create a new branch for your feature.
-3. Make your changes and commit them with descriptive messages.
-4. Push your changes to your fork.
-5. Submit a pull request with a clear description of your changes.
+```text
+help
+macro selic
+macro ipca
+macro dolar
+quote AAPL
+compare AAPL MSFT
+portfolio risco
+```
 
-## License
+Veja detalhes em [docs/commands.md](docs/commands.md).
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+## Fontes de Dados
 
-## Acknowledgments
+- Banco Central SGS para Selic, IPCA e dolar.
+- OpenBB para cotacoes, historicos e fundamentos quando providers estiverem configurados.
+- CSV local para composicao de carteira.
+- Arquivos PDF/TXT/Markdown enviados pelo usuario para analise local.
 
-- [OpenBB SDK](https://github.com/OpenBB-finance/OpenBBTerminal) for providing the financial data and analysis tools.
-- [Streamlit](https://streamlit.io/) for the web application framework.
-- All the open-source libraries used in this project.
+Veja detalhes em [docs/data_sources.md](docs/data_sources.md).
 
+## Limites Conhecidos
+
+- Resultados sao informativos e educacionais.
+- Renda fixa usa aproximacoes simplificadas.
+- Analise de documentos e heuristica, sem LLM por padrao.
+- PDF depende de `pypdf` quando usado.
+- Algumas fontes OpenBB podem exigir provider/API key.
+- Testes evitam internet; chamadas externas devem ser mockadas.
+
+## Roadmap
+
+- Expandir dashboard de carteira com risco, drawdown e comparativos.
+- Adicionar conectores de CVM, Tesouro Direto e B3 quando as fontes forem definidas.
+- Melhorar relatorios com LLM opcional via variavel de ambiente.
+- Adicionar lint/type-check ao CI.
+- Criar fluxo de deploy para ambiente Streamlit.
+
+## Testes
+
+```bash
+pytest
+```
+
+O CI em `.github/workflows/tests.yml` executa `pytest` em push e pull request.
+
+## Arquitetura
+
+Veja [docs/architecture.md](docs/architecture.md).
