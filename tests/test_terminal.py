@@ -25,6 +25,7 @@ def test_help_command_lists_initial_commands() -> None:
 
     assert result.title == "Ajuda"
     assert "macro selic" in result.message
+    assert "fund CNPJ" in result.message
     assert "portfolio risco" in result.message
 
 
@@ -63,6 +64,21 @@ def test_compare_command_requires_two_tickers() -> None:
 
     assert result.title == "Comparacao"
     assert "TICKER1 TICKER2" in result.message
+
+
+def test_fund_command_uses_cvm_layer(monkeypatch) -> None:
+    data = pd.DataFrame({"cnpj_fundo": ["00000000000191"], "denom_social": ["Fundo Alpha"]})
+
+    def fake_find_fund_by_cnpj(cnpj: str):
+        assert cnpj == "00.000.000/0001-91"
+        return data
+
+    monkeypatch.setattr(terminal_commands, "find_fund_by_cnpj", fake_find_fund_by_cnpj)
+
+    result = execute_command("fund 00.000.000/0001-91")
+
+    assert result.title == "Fundos CVM"
+    assert result.dataframe is data
 
 
 def test_unknown_command_returns_friendly_message() -> None:

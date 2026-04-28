@@ -4,3 +4,5 @@ __pycache__/
 .pytest_cache/
 *.pyc
 data/raw/bcb/**/*.csv
+data/raw/cvm/**/*.csv
+data/raw/cvm/**/*.zip
