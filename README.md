@@ -86,6 +86,17 @@ streamlit run app/streamlit_app.py
 
 A aplicacao abre por padrao em `http://localhost:8501`.
 
+## Metricas de risco
+
+Os modulos `src/analytics/returns.py` e `src/analytics/risk.py` incluem funcoes puras para:
+
+- retornos periodicos;
+- retorno acumulado;
+- volatilidade anualizada;
+- drawdown e max drawdown;
+- matriz de correlacao;
+- Sharpe simplificado.
+
 ## Testes
 
 ```bash
