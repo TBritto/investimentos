@@ -77,6 +77,8 @@ openfinance transactions ACCOUNT_ID
 
 O comando `connect-token` gera um token de curta duracao para uso no Pluggy Connect Widget. O consentimento do usuario acontece fora do terminal.
 
+A pagina `Open Finance` oferece o fluxo visual equivalente para uso profissional com consentimento.
+
 ### portfolio risco
 
 Reservado para consolidar metricas de risco da carteira.

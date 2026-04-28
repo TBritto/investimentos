@@ -56,6 +56,7 @@ FMP_API_KEY=
 PLUGGY_CLIENT_ID=
 PLUGGY_CLIENT_SECRET=
 PLUGGY_BASE_URL=
+PLUGGY_CONNECT_URL=
 ```
 
 Nao coloque chaves ou segredos no codigo.

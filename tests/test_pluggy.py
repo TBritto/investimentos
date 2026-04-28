@@ -8,8 +8,10 @@ from src.data.pluggy import (
     create_api_key,
     create_connect_token,
     get_accounts,
+    get_connect_widget_url,
     get_items,
     get_transactions,
+    is_configured,
 )
 
 
@@ -80,6 +82,21 @@ def test_create_connect_token_uses_api_key(monkeypatch):
             "oauthRedirectUrl": "https://app.local/callback",
         }
     }
+
+
+def test_is_configured_checks_credentials(monkeypatch):
+    monkeypatch.delenv("PLUGGY_CLIENT_ID", raising=False)
+    monkeypatch.delenv("PLUGGY_CLIENT_SECRET", raising=False)
+    assert is_configured() is False
+
+    configure_env(monkeypatch)
+    assert is_configured() is True
+
+
+def test_get_connect_widget_url_uses_token_and_base_url(monkeypatch):
+    monkeypatch.setenv("PLUGGY_CONNECT_URL", "https://connect.sandbox")
+
+    assert get_connect_widget_url("abc") == "https://connect.sandbox/?connect_token=abc"
 
 
 def test_get_items_normalizes_response(monkeypatch):
