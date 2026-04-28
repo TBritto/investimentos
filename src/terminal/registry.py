@@ -10,6 +10,7 @@ from src.terminal.commands import (
     help_command,
     macro_command,
     not_implemented_command,
+    openfinance_command,
     portfolio_command,
     quote_command,
 )
@@ -25,6 +26,7 @@ COMMAND_REGISTRY: dict[str, CommandHandler] = {
     "compare": compare_command,
     "fund": fund_command,
     "finance": finance_command,
+    "openfinance": openfinance_command,
     "portfolio": portfolio_command,
 }
 

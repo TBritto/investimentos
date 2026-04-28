@@ -28,6 +28,7 @@ def test_help_command_lists_initial_commands() -> None:
     assert "macro selic" in result.message
     assert "fund CNPJ" in result.message
     assert "finance accounts" in result.message
+    assert "openfinance accounts" in result.message
     assert "portfolio risco" in result.message
 
 
@@ -86,11 +87,22 @@ def test_fund_command_uses_cvm_layer(monkeypatch) -> None:
 def test_finance_command_uses_firefly_layer(monkeypatch) -> None:
     data = pd.DataFrame({"name": ["Conta Corrente"], "current_balance": [100.0]})
 
-    monkeypatch.setattr(terminal_commands, "get_accounts", lambda: data)
+    monkeypatch.setattr(terminal_commands, "get_firefly_accounts", lambda: data)
 
     result = execute_command("finance accounts")
 
     assert result.title == "Contas Firefly III"
+    assert result.dataframe is data
+
+
+def test_openfinance_accounts_uses_pluggy_layer(monkeypatch) -> None:
+    data = pd.DataFrame({"id": ["account-1"], "name": ["Conta Corrente"]})
+
+    monkeypatch.setattr(terminal_commands, "get_openfinance_accounts", lambda item_id=None: data)
+
+    result = execute_command("openfinance accounts")
+
+    assert result.title == "Contas Open Finance"
     assert result.dataframe is data
 
 

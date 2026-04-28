@@ -8,7 +8,18 @@ import pandas as pd
 from src.commands.macro import execute_macro_command
 from src.commands.quote_compare import execute_market_command
 from src.data.cvm import find_fund_by_cnpj
-from src.data.firefly import get_accounts, get_categories, get_finance_summary, get_transactions
+from src.data.firefly import (
+    get_accounts as get_firefly_accounts,
+    get_categories,
+    get_finance_summary,
+    get_transactions as get_firefly_transactions,
+)
+from src.data.pluggy import (
+    create_connect_token,
+    get_accounts as get_openfinance_accounts,
+    get_items,
+    get_transactions as get_openfinance_transactions,
+)
 from src.terminal.parser import CommandRequest
 
 
@@ -33,6 +44,10 @@ Comandos disponiveis:
 - finance transactions
 - finance categories
 - finance summary
+- openfinance connect-token
+- openfinance items
+- openfinance accounts
+- openfinance transactions ACCOUNT_ID
 - portfolio risco
 """.strip()
 
@@ -108,9 +123,9 @@ def finance_command(request: CommandRequest) -> CommandResult:
     action = request.args[0].lower()
     try:
         if action == "accounts":
-            return CommandResult(title="Contas Firefly III", dataframe=get_accounts())
+            return CommandResult(title="Contas Firefly III", dataframe=get_firefly_accounts())
         if action == "transactions":
-            return CommandResult(title="Transacoes Firefly III", dataframe=get_transactions())
+            return CommandResult(title="Transacoes Firefly III", dataframe=get_firefly_transactions())
         if action == "categories":
             return CommandResult(title="Categorias Firefly III", dataframe=get_categories())
         if action == "summary":
@@ -121,6 +136,48 @@ def finance_command(request: CommandRequest) -> CommandResult:
     return CommandResult(
         title="Financas pessoais",
         message="Comando desconhecido. Use finance accounts, transactions, categories ou summary.",
+    )
+
+
+def openfinance_command(request: CommandRequest) -> CommandResult:
+    if not request.args:
+        return CommandResult(
+            title="Open Finance",
+            message=(
+                "Use openfinance connect-token, openfinance items, "
+                "openfinance accounts ou openfinance transactions ACCOUNT_ID."
+            ),
+        )
+
+    action = request.args[0].lower()
+    try:
+        if action == "connect-token":
+            token = create_connect_token()
+            return CommandResult(
+                title="Open Finance",
+                message=f"Connect token gerado. Use no Pluggy Connect Widget: {token}",
+            )
+        if action == "items":
+            return CommandResult(title="Conexoes Open Finance", dataframe=get_items())
+        if action == "accounts":
+            item_id = request.args[1] if len(request.args) > 1 else None
+            return CommandResult(title="Contas Open Finance", dataframe=get_openfinance_accounts(item_id=item_id))
+        if action == "transactions":
+            if len(request.args) < 2:
+                return CommandResult(
+                    title="Transacoes Open Finance",
+                    message="Use openfinance transactions ACCOUNT_ID.",
+                )
+            return CommandResult(
+                title="Transacoes Open Finance",
+                dataframe=get_openfinance_transactions(account_id=request.args[1]),
+            )
+    except Exception as exc:
+        return CommandResult(title="Open Finance", message=str(exc))
+
+    return CommandResult(
+        title="Open Finance",
+        message="Comando desconhecido. Use connect-token, items, accounts ou transactions ACCOUNT_ID.",
     )
 
 
