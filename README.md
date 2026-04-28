@@ -87,7 +87,7 @@ streamlit run app/streamlit_app.py
 
 A aplicacao abre por padrao em `http://localhost:8501`.
 
-## Comandos macro
+## Comandos macro e mercado
 
 A pagina `Terminal` aceita os comandos iniciais:
 
@@ -95,10 +95,21 @@ A pagina `Terminal` aceita os comandos iniciais:
 macro selic
 macro ipca
 macro dolar
+quote AAPL
+compare AAPL MSFT
 ```
 
-Esses comandos usam series publicas do Banco Central SGS via `src/data/bcb.py`.
+Os comandos macro usam series publicas do Banco Central SGS via `src/data/bcb.py`.
 As respostas sao normalizadas para as colunas `date`, `value` e `code`, com cache local em `data/raw/bcb/`.
+
+Esses comandos usam `src/data/openbb_client.py`, que encapsula as chamadas ao OpenBB.
+Para endpoints que exigem provider, configure as variaveis no `.env`, por exemplo:
+
+```env
+FMP_API_KEY=
+```
+
+Falhas de provider ou API sao convertidas em mensagens amigaveis pela excecao `OpenBBClientError`.
 
 ## Testes
 
