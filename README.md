@@ -87,16 +87,19 @@ streamlit run app/streamlit_app.py
 
 A aplicacao abre por padrao em `http://localhost:8501`.
 
-## Comandos macro e mercado
+## Terminal de comandos
 
-A pagina `Terminal` aceita os comandos iniciais:
+A pagina `Terminal` possui parser, registry e historico de comandos da sessao.
+Comandos reconhecidos inicialmente:
 
 ```text
+help
 macro selic
 macro ipca
 macro dolar
 quote AAPL
 compare AAPL MSFT
+portfolio risco
 ```
 
 Os comandos macro usam series publicas do Banco Central SGS via `src/data/bcb.py`.
@@ -110,6 +113,8 @@ FMP_API_KEY=
 ```
 
 Falhas de provider ou API sao convertidas em mensagens amigaveis pela excecao `OpenBBClientError`.
+
+Quando um comando depende de conector ainda nao integrado, o terminal retorna uma mensagem amigavel indicando a etapa responsavel.
 
 ## Carteira CSV
 
